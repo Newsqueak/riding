@@ -24,6 +24,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.get("/eee", function(req, res){
+
+    res.writeHead(200,{"Content-Type": "text/plain"});
+    res.end("12347569111111111111119000");
+
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
