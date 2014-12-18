@@ -7,6 +7,8 @@ var fs = require('fs');
 var express = require('express');
 var mongoose = require('mongoose');
 var config = require('../config/config');
+var errCode= require("../common/ErrorCode.js");
+
 
 var app = express();
 var port = process.env.PORT || 3000;

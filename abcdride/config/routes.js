@@ -15,7 +15,12 @@ module.exports = function (app, passport) {
 
     // user routes
     //app.use()
+    app.get("/eee", function(req, res){
 
+        res.writeHead(200,{"Content-Type": "text/plain"});
+        res.end("12347569111111111111119000");
+
+    });
 
 
 
