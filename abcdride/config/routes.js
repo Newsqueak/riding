@@ -11,7 +11,7 @@ var vod = require('../app/action/vod');
  * Expose routes
  */
 
-module.exports = function (app, passport) {
+module.exports = function (app, passport, errorCode) {
 
     // user routes
     //app.use()

@@ -5,6 +5,7 @@
  */
 var fs = require('fs');
 var express = require('express');
+var passport = require('passport');
 var mongoose = require('mongoose');
 var config = require('../config/config');
 var errCode= require("../common/ErrorCode.js");
@@ -32,12 +33,18 @@ mongoose.connection.on('disconnected', connect);
 
 });
 
+
+
+
 // The project's individual business modules assembling below
+// Bootstrap passport config
+require('./config/passport')(passport, config);
+
 // Bootstrap application underlying settings
-require('../config/express')(app, undefined);
+require('../config/express')(app, passport);
 
 // Bootstrap routes
-require('../config/routes')(app, undefined);
+require('../config/routes')(app, passport, errCode);
 
 
 // Starting server after all preparations
