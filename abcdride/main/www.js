@@ -6,24 +6,12 @@
 var fs = require('fs');
 var express = require('express');
 var passport = require('passport');
-var mongoose = require('mongoose');
-var config = require('../config/config');
-var errCode= require("../common/ErrorCode.js");
-
+var config = require("../config/config");
+var common = require("../common");
 
 var app = express();
 var port = process.env.PORT || 3000;
 
-// Connect to mongodb
-var connect = function () {
-    var options = {server: {socketOptions: {keepAlive: 1}}};
-    //mongoose.connect(config.db, options);
-    console.log(options);
-};
-connect();
-
-mongoose.connection.on('error', console.log);
-mongoose.connection.on('disconnected', connect);
 
 // Bootstrap models like classLoader
 ["action", "service", "dao"].forEach(function (subdir) {
@@ -44,7 +32,7 @@ require('./config/passport')(passport, config);
 require('../config/express')(app, passport);
 
 // Bootstrap routes
-require('../config/routes')(app, passport, errCode);
+require('../config/routes')(app, passport, common.ErrCode);
 
 
 // Starting server after all preparations

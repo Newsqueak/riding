@@ -12,7 +12,10 @@ var oAuthTypes = [
   'twitter',
   'facebook',
   'google',
-  'linkedin'
+  'linkedin',
+  'weibo',
+  'weixin',
+  'qq'
 ];
 
 /**
