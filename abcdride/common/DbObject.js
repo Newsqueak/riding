@@ -6,11 +6,11 @@ var busiMongo = new archvMongo.Mongoose();
 //TODO : write into Primary Node and read from Secondary Nodes  && config.db split into archive and busiOne
 var archvConnect = function () {
     var options = {server: {socketOptions: {keepAlive: 1}}};
-    archvMongo.connect(config.db, options);
+    archvMongo.connect(config.archvDb, options);
 };
 var busiConnect = function () {
     var options = {server: {socketOptions: {keepAlive: 1}}};
-    busiMongo.connect(config.db, options);
+    busiMongo.connect(config.busiDb, options);
 };
 
 archvConnect();

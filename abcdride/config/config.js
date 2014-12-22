@@ -14,9 +14,9 @@ var production = require('./env/production');
  */
 
 var production = {
-    db: process.env.MONGO_PRO_URL
-}
-
+    archvDb: process.env.MONGO_PRO_URL,
+    busiDb: process.env.MONGO_PRO_URL
+};
 
 /**
  * This is an SMS or Email notification configuration part *

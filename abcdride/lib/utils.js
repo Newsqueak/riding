@@ -109,7 +109,7 @@ exports.objectId = function (seed, m) {
 
     return crypto.createHash("sha1").update(seed).digest("base64").substring(0, 9) + crypto.randomBytes(m).toString("hex").toUpperCase() + nDigitsOfTime(3);
 
-}
+};
 
 /**
  * Id's strategy with random
@@ -122,4 +122,9 @@ exports.uuid = function (m) {
     }
 
     return crypto.randomBytes(m).toString("hex").toUpperCase() + nDigitsOfTime(3);
-}
+};
+
+exports.certainId = function (seed) {
+    return crypto.createHash("sha1").update(seed).digest("base64");
+
+};
