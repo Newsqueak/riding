@@ -20,7 +20,12 @@ busiMongo.connection.on('error', console.log);
 archvMongo.connection.on('disconnected',archvConnect);
 busiMongo.connection.on('disconnected', busiConnect);
 
+
+require("mongoose-long")(archvMongo);
+var mySchema = archvMongo.Schema;
+
 var dbObject = module.exports = exports = {
     archives: archvMongo
     , hotspots: busiMongo
+    , Schema: mySchema
 };
