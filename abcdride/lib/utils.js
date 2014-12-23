@@ -128,3 +128,9 @@ exports.certainId = function (seed) {
     return crypto.createHash("sha1").update(seed).digest("base64");
 
 };
+
+exports.token = function (seed) {
+    var coin = crypto.createHash("sha1").update(seed).digest("base64");
+    return coin.substring(0, coin.length - 1) + nDigitsOfTime(3);
+
+};
