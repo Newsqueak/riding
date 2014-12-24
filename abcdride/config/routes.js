@@ -1,11 +1,7 @@
 /*!
  * Module dependencies.
  */
-
-// Note: We can require users, articles and other cotrollers because we have
-// set the NODE_PATH to be ./app/controllers (package.json # scripts # start)
-
-var vod = require('../app/action/vod');
+//var vod = require('../app/action/vod');
 
 /**
  * Expose routes
@@ -45,4 +41,4 @@ module.exports = function (app, passport, errorCode) {
     app.use(function (req, res, next) {
         return res.status(404).end();
     });
-}
+};
