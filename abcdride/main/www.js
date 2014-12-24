@@ -26,7 +26,7 @@ var port = process.env.PORT || 3000;
 
 // The project's individual business modules assembling below
 // Bootstrap passport config
-require('./config/passport')(passport, config);
+//require('./config/passport')(passport, config);
 
 // Bootstrap application underlying settings
 require('../config/express')(app, passport);
