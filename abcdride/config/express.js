@@ -14,7 +14,6 @@ var csrf = require('csurf');
 var busboy = require('connect-busboy');
 var swig = require('swig');
 
-var mongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var winston = require('winston');
 var helpers = require('view-helpers');
@@ -53,7 +52,7 @@ module.exports = function (app, passport) {
 
     // Don't log during tests
     // Logging middleware
-    if (env !== 'test') app.use(morgan(log));
+    if (env !== 'test') app.use(morgan('combined', log));
 
     // Swig templating engine settings
     if (env === 'development' || env === 'test') {
@@ -93,12 +92,7 @@ module.exports = function (app, passport) {
     app.use(session({
         resave: true,
         saveUninitialized: true,
-        secret: pkg.name,
-        store: new mongoStore({
-            url: config.db,
-            db: "nodeSession",
-            collection: 'sessions'
-        })
+        secret: pkg.name
     }));
 
     //// use passport session
