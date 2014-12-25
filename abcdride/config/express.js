@@ -3,7 +3,7 @@
  */
 
 var express = require('express');
-var session = require('express-session');
+var session = require('./middlewares/TokenSession');
 var compression = require('compression');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
