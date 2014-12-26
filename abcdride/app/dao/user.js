@@ -3,45 +3,34 @@
  * Module dependencies.
  */
 
-var mongoose = require('mongoose');
 var crypto = require('crypto');
+var common = require("../../common");
 
-var Schema = mongoose.Schema;
-var oAuthTypes = [
-  'github',
-  'twitter',
-  'facebook',
-  'google',
-  'linkedin',
-  'weibo',
-  'weixin',
-  'qq'
-];
+var Schema = common.DBObject.Schema;
 
 /**
  * User Schema
  */
 
-var UserSchema = new Schema({
-  name: { type: String, default: '' },
-  email: { type: String, default: '' },
-  username: { type: String, default: '' },
-  provider: { type: String, default: '' },
-  hashed_password: { type: String, default: '' },
-  salt: { type: String, default: '' },
-  authToken: { type: String, default: '' },
-  facebook: {},
-  twitter: {},
-  github: {},
-  google: {},
-  linkedin: {}
-});
+var localUserSchema = new Schema({
+  _id: {type: String, required: true},
+  un: {type: String, required: true, index: {unique: true, sparse: true}},
+  email: {type: String, default: ""},
+  phone: {type: String, default: ""},
+  name: {type: String, default: ""},
+  provider: {type: String, default: "local"},
+  hashed_password: {type: String, default: ""},
+  salt: {type: String, default: ""},
+  authToken: {type: String, default: ""},
+  avatar_url: {type: String, default: ""}
+
+}, {versionKey: false});
 
 /**
  * Virtuals
  */
 
-UserSchema
+localUserSchema
   .virtual('password')
   .set(function(password) {
     this._password = password;
@@ -58,91 +47,60 @@ var validatePresenceOf = function (value) {
   return value && value.length;
 };
 
-// the below 5 validations only apply if you are signing up traditionally
-
-UserSchema.path('name').validate(function (name) {
-  if (this.skipValidation()) return true;
-  return name.length;
-}, 'Name cannot be blank');
-
-UserSchema.path('email').validate(function (email) {
-  if (this.skipValidation()) return true;
-  return email.length;
-}, 'Email cannot be blank');
-
-UserSchema.path('email').validate(function (email, fn) {
-  var User = mongoose.model('User');
-  if (this.skipValidation()) fn(true);
-
-  // Check only when it is a new user or when email field is modified
-  if (this.isNew || this.isModified('email')) {
-    User.find({ email: email }).exec(function (err, users) {
-      fn(!err && users.length === 0);
-    });
-  } else fn(true);
-}, 'Email already exists');
-
-UserSchema.path('username').validate(function (username) {
-  if (this.skipValidation()) return true;
+localUserSchema.path('un').validate(function (username) {
   return username.length;
 }, 'Username cannot be blank');
 
-UserSchema.path('hashed_password').validate(function (hashed_password) {
-  if (this.skipValidation()) return true;
+localUserSchema.path('name').validate(function (name) {
+  return name.length;
+}, 'Name cannot be blank');
+
+localUserSchema.path('hashed_password').validate(function (hashed_password) {
   return hashed_password.length;
 }, 'Password cannot be blank');
+
+localUserSchema.path('un').validate(function (username, fn) {
+  var User = common.DBObject.archives.model('User');
+
+  // Check only when it is a new user or when username field is modified
+  if (this.isNew || this.isModified('un')) {
+    User.find({un: username}).exec(function (err, users) {
+      fn(!err && users.length === 0);
+    });
+  } else fn(true);
+}, 'Username already exists');
 
 
 /**
  * Pre-save hook
  */
 
-UserSchema.pre('save', function(next) {
+localUserSchema.pre('save', function (next) {
   if (!this.isNew) return next();
 
-  if (!validatePresenceOf(this.password) && !this.skipValidation()) {
+  if (!validatePresenceOf(this.password)) {
     next(new Error('Invalid password'));
   } else {
     next();
   }
-})
+});
 
 /**
  * Methods
  */
 
-UserSchema.methods = {
+localUserSchema.methods = {
 
-  /**
-   * Authenticate - check if the passwords are the same
-   *
-   * @param {String} plainText
-   * @return {Boolean}
-   * @api public
-   */
 
   authenticate: function (plainText) {
     return this.encryptPassword(plainText) === this.hashed_password;
   },
 
-  /**
-   * Make salt
-   *
-   * @return {String}
-   * @api public
-   */
 
   makeSalt: function () {
     return Math.round((new Date().valueOf() * Math.random())) + '';
   },
 
-  /**
-   * Encrypt password
-   *
-   * @param {String} password
-   * @return {String}
-   * @api public
-   */
 
   encryptPassword: function (password) {
     if (!password) return '';
@@ -154,37 +112,23 @@ UserSchema.methods = {
     } catch (err) {
       return '';
     }
-  },
-
-  /**
-   * Validation is not required if using OAuth
-   */
-
-  skipValidation: function() {
-    return ~oAuthTypes.indexOf(this.provider);
   }
+
 };
 
 /**
  * Statics
  */
 
-UserSchema.statics = {
-
-  /**
-   * Load
-   *
-   * @param {Object} options
-   * @param {Function} cb
-   * @api private
-   */
+localUserSchema.statics = {
 
   load: function (options, cb) {
-    options.select = options.select || 'name username';
+    options.select = options.select || '_id un name';
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
   }
-}
+};
 
-mongoose.model('User', UserSchema);
+var LocalUserDao = module.exports = exports =
+    common.DBObject.archives.model('User', localUserSchema);
