@@ -21,10 +21,11 @@ var localUserSchema = new Schema({
   provider: {type: String, default: "local"},
   hashed_password: {type: String, default: ""},
   salt: {type: String, default: ""},
-  authToken: {type: String, default: ""},
+  tkn: {type: String, required: true, index: {unique: true, sparse: true}},
   avatar_url: {type: String, default: ""}
 
 }, {versionKey: false});
+
 
 /**
  * Virtuals
@@ -123,7 +124,7 @@ localUserSchema.methods = {
 localUserSchema.statics = {
 
   load: function (options, cb) {
-    options.select = options.select || '_id un name';
+    options.select = options.select || '_id un name avatar_url';
     this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
