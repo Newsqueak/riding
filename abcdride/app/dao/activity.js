@@ -3,7 +3,7 @@ var Schema = common.DBObject.Schema;
 
 var activitySchema = new Schema({
     _id: {type: Number, required: true},
-    ct: {type: String, default: "Beijing, China", index: {unique: true, sparse: true}},
+    ct: {type: String, default: "Beijing, China", index: true},
     bgimg: {type: String, default: ""},
     stdate: {type: Date, default: Date.now},
     enddate: {type: Date, default: Date.now},
