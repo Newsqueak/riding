@@ -17,5 +17,27 @@ var activitySchema = new Schema({
 }, {versionKey: false});
 
 
+activitySchema.statics = {
+
+    loadByCityPerPage: function (city, pageIndex, unitNum, cb) {
+        var skipNum = unitNum * (pageIndex - 1);
+        var countQuery = this.find({ct: city});
+        this.find({ct: city}).sort("deadline").skip(skipNum).limit(unitNum).exec(
+            function (err, docs) {
+                countQuery.count(function (errr, number) {
+                    if (!err && !errr) {
+                        cb(docs, Math.round(number * 1.0 / unitNum + 0.5));
+                    }
+                });
+
+
+            }
+        );
+
+    }
+
+
+};
+
 var activityDao = module.exports = exports =
     common.DBObject.hotspots.model("Activity", activitySchema);
