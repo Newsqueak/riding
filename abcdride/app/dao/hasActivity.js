@@ -11,5 +11,25 @@ var userActivRsSchema = new Schema({
 
 }, {versionKey: false});
 
+userActivRsSchema.statics = {
+
+    loadUserActivRS: function (user_id, activ_id, cb) {
+        var criteria = {};
+        criteria["_id." + common.Consts.DB.NODE.user] = user_id;
+        criteria["_id." + common.Consts.DB.NODE.activity] = activ_id;
+        this.findOne(criteria).exec(cb);
+
+    },
+    loadItsRoster: function (activ_id, cb) {
+        var criteria = {};
+        criteria["_id." + common.Consts.DB.NODE.activity] = activ_id;
+        criteria["isrgst"] = true;
+        this.find(criteria).sort("-dmile").select("_id").exec(cb);
+
+    }
+
+};
+
+
 var hasActivDao = module.exports = exports =
     common.DBObject.hotspots.model(common.Consts.DB.RS.hasActivity, userActivRsSchema);

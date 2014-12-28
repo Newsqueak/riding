@@ -27,10 +27,16 @@ var trackSchema = new Schema({
 
 trackSchema.statics = {
 
-    loadByUid: function () {
+    loadByUid: function (user_id, cb) {
+        var criteria = {};
+        criteria["_id." + common.Consts.DB.NODE.user] = user_id;
+        this.find(criteria).sort("-date").exec(cb);
+
     },
 
-    loadAll: function () {
+    loadAll: function (cb) {
+        this.find().sort("-date").exec(cb);
+
     }
 
 

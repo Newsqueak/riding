@@ -9,6 +9,16 @@ var remarkTrackRsSchema = new Schema({
 
 }, {versionKey: false});
 
+remarkTrackRsSchema.statics = {
+
+    getOnesRemark: function (user_id, track_id, cb) {
+        var criteria = {};
+        criteria["_id." + common.Consts.DB.NODE.user] = user_id;
+        criteria["_id." + common.Consts.DB.NODE.track] = track_id;
+        this.findOne(criteria).exec(cb);
+    }
+
+};
 
 var remarkTrackDao = module.exports = exports =
     common.DBObject.archives.model("RemarkTrackRS", remarkTrackRsSchema);
