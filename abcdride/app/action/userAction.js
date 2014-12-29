@@ -4,14 +4,14 @@ var common = require("../../common");
 
 exports.create = function (req, res, next) {
 
-    var username = req.body["username"];
+    var username = req.body["username"] || "";
     var email = common.Consts.REGEXP.isEmail.test(username) ? username : "";
     var phone = common.Consts.REGEXP.isPhone.test(username) ? username : "";
-    var passwd = req.body["password"];
+    var passwd = req.body["password"] || "";
     var id = common.Consts.DB.NODE.user + common.Consts.Split
         + utils.objectId("" + username + new Date().getTime(), 3);
     var token = utils.token("" + username + passwd + new Date().getTime());
-    var nickname = req.body["name"] || "";
+    var nickname = req.body["name"] || username || "un-named";
     var avatarUrl = req.body["avatar_url"] || "";
     var aUser = new User({
         _id: id,
