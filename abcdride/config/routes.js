@@ -1,7 +1,9 @@
 /*!
  * Module dependencies.
  */
-//var vod = require('../app/action/vod');
+var usersAction = require('../app/action/userAction');
+var tracksAction = require('../app/action/trackAction');
+var activAction = require('../app/action/activAction');
 
 /**
  * Expose routes
@@ -10,17 +12,12 @@
 module.exports = function (app, passport, errorCode) {
 
     // user routes
-    //app.use()
-    app.post("/eee", function (req, res) {
-        console.log(req.body);
-        console.log(req.userToken);
-        res.writeHead(200,{"Content-Type": "text/plain"});
-        res.end("12347569111111111111119000");
-
-    });
-
-
-
+    app.post("/signup", usersAction.create);
+    app.post("/login", usersAction.login);
+    app.post("/getActivities", activAction.list);
+    app.post("/getActivityDetail", activAction.activDetail);
+    app.post("/getActivityRegister", activAction.roster);
+    app.post("/getRideTrackList", tracksAction.listTracks);
 
     /**
      * Error handling
@@ -35,7 +32,7 @@ module.exports = function (app, passport, errorCode) {
         }
         console.error(err.stack);
         // error page
-        res.status(500).render('500', {error: err.stack});
+        res.status(200).end(JSON.stringify({code: errorCode.customFailure, msg: err.message}));
     });
 
     // assume 404 since no middleware responded
