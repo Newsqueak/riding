@@ -35,7 +35,7 @@ exports.create = function (req, res, next) {
 
 exports.login = function (req, res, next) {
 
-    var username = req.body["email"] || req.body["phone"];
+    var username = req.body["email"] || req.body["phone"] || req.body["username"];
     var passwd = req.body["password"] || "";
     User.load({
         criteria: {un: username},
